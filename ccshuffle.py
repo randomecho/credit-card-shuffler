@@ -10,11 +10,12 @@ with open('/tmp/activity.csv') as csv_file:
         next(csv_reader)
 
     for row in csv_reader:
-        expenses.append({
-            "transaction_date": row[0],
-            "description": row[2],
-            "amount": row[3],
-            "category": row[4]
-            })
+        if float(row[3]) > 0:
+            expenses.append({
+                "transaction_date": row[0],
+                "description": row[2],
+                "amount": row[3],
+                "category": row[4]
+                })
 
 print(expenses)
