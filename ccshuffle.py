@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+from operator import itemgetter
 
 input_file = '/tmp/activity.csv'
 output_file = '/tmp/activity-processed.csv'
@@ -23,6 +24,8 @@ with open(input_file) as csv_file:
                 })
 
 if expenses:
+    expenses.sort(key=itemgetter("transaction_date"))
+
     with open(output_file, "w") as output_file_location:
         columns = ['transaction_date', 'amount', 'category', 'description']
         csv_out = csv.writer(output_file_location)
