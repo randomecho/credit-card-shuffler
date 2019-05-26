@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 
 input_file = '/tmp/activity.csv'
 output_file = '/tmp/activity-processed.csv'
@@ -15,10 +16,16 @@ with open(input_file) as csv_file:
     for row in csv_reader:
         if float(row[3]) > 0:
             expenses.append({
-                "transaction_date": row[0],
+                "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
                 "description": row[2],
                 "amount": row[3],
                 "category": row[4],
                 })
 
-print(expenses)
+if expenses:
+    with open(output_file, "w") as output_file_location:
+        columns = ['transaction_date', 'amount', 'category', 'description']
+        csv_out = csv.writer(output_file_location)
+
+        for expense in expenses:
+            csv_out.writerow([expense["transaction_date"], expense["amount"], expense["category"], expense["description"]])
