@@ -1,11 +1,18 @@
 import csv
+from argparse import ArgumentParser
 from datetime import datetime
 from operator import itemgetter
 
-input_file = '/tmp/activity.csv'
-output_file = '/tmp/activity-processed.csv'
+parser = ArgumentParser()
+parser.add_argument("-i", "--input", dest="input_file",
+    default='/tmp/activity.csv',
+    help="CSV input file with transactions (default: %(default)s)")
+parser.add_argument("-o", "--output", dest="output_file",
+    default='/tmp/activity-processed.csv',
+    help="Output location of reformatted CSV (default: %(default)s)")
+args = parser.parse_args()
 
-with open(input_file) as csv_file:
+with open(args.input_file) as csv_file:
     csv_reader = csv.reader(csv_file)
     has_header = csv.Sniffer().has_header(csv_file.read(1024))
     csv_file.seek(0)
@@ -26,7 +33,7 @@ with open(input_file) as csv_file:
 if expenses:
     expenses.sort(key=itemgetter("transaction_date"))
 
-    with open(output_file, "w") as output_file_location:
+    with open(args.output_file, "w") as output_file_location:
         columns = ['transaction_date', 'amount', 'category', 'description']
         csv_out = csv.writer(output_file_location)
 
