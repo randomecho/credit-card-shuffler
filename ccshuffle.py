@@ -23,7 +23,7 @@ def convert_input(row):
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
                 "description": row[2],
-                "amount": row[3],
+                "amount": abs(float(row[3])),
                 "category": row[4],
                 }
     elif (args.format == 'memo'):
@@ -34,17 +34,24 @@ def convert_input(row):
                 "amount": abs(float(row[4])),
                 "category": "",
                 }
+    elif (args.format == 'status'):
+        if row[3] and float(row[3]) > 0:
+            return {
+                "transaction_date": datetime.strptime(row[1], '%m/%d/%Y').strftime('%Y-%m-%d'),
+                "description": row[2],
+                "amount": abs(float(row[3])),
+                "category": "",
+                }
 
 try:
     with open(args.input_file) as csv_file:
         csv_reader = csv.reader(csv_file)
 
-        if (args.format == 'basic') or (args.format == 'memo'):
-            has_header = csv.Sniffer().has_header(csv_file.read(1024))
-            csv_file.seek(0)
+        has_header = csv.Sniffer().has_header(csv_file.read(1024))
+        csv_file.seek(0)
 
-            if has_header:
-                next(csv_reader)
+        if has_header:
+            next(csv_reader)
 
         for row in csv_reader:
             row_extract = convert_input(row)
