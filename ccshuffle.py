@@ -23,7 +23,7 @@ def convert_input(row):
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
                 "description": row[2],
-                "amount": abs(float(row[3])),
+                "amount": row[3],
                 "category": row[4],
                 }
     elif (args.format == 'long'):
@@ -31,7 +31,7 @@ def convert_input(row):
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y %a').strftime('%Y-%m-%d'),
                 "description": row[2],
-                "amount": abs(float(row[7])),
+                "amount": row[7],
                 "category": "",
                 }
     elif (args.format == 'memo'):
@@ -39,7 +39,7 @@ def convert_input(row):
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
                 "description": row[2],
-                "amount": abs(float(row[4])),
+                "amount": row[4],
                 "category": "",
                 }
     elif (args.format == 'ref'):
@@ -47,7 +47,7 @@ def convert_input(row):
             return {
                 "transaction_date": datetime.strptime(row[0].strip(), '%m/%d/%Y').strftime('%Y-%m-%d'),
                 "description": row[1],
-                "amount": abs(float(row[2])),
+                "amount": row[2],
                 "category": "",
                 }
     elif (args.format == 'sale'):
@@ -55,7 +55,7 @@ def convert_input(row):
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
                 "description": row[2],
-                "amount": abs(float(row[5])),
+                "amount": row[5],
                 "category": row[3],
                 }
     elif (args.format == 'status'):
@@ -63,7 +63,7 @@ def convert_input(row):
             return {
                 "transaction_date": datetime.strptime(row[1], '%m/%d/%Y').strftime('%Y-%m-%d'),
                 "description": row[2],
-                "amount": abs(float(row[3])),
+                "amount": row[3],
                 "category": "",
                 }
 
@@ -93,4 +93,9 @@ if expenses:
         csv_out = csv.writer(output_file_location)
 
         for expense in expenses:
-            csv_out.writerow([expense["transaction_date"], expense["amount"], expense["category"], expense["description"]])
+            csv_out.writerow([
+                expense["transaction_date"],
+                abs(float(expense["amount"])),
+                expense["category"],
+                expense["description"],
+            ])
