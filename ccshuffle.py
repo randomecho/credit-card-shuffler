@@ -26,12 +26,20 @@ def convert_input(row):
                 "amount": row[3],
                 "category": row[4],
                 }
+    elif (args.format == 'memo'):
+        if row[1] == "DEBIT":
+            return {
+                "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
+                "description": row[2],
+                "amount": abs(float(row[4])),
+                "category": "",
+                }
 
 try:
     with open(args.input_file) as csv_file:
         csv_reader = csv.reader(csv_file)
 
-        if (args.format == 'basic'):
+        if (args.format == 'basic') or (args.format == 'memo'):
             has_header = csv.Sniffer().has_header(csv_file.read(1024))
             csv_file.seek(0)
 
