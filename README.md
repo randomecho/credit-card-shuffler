@@ -19,6 +19,7 @@ on the input column format of the CSV.
 - "default" - `Trans. Date,Post Date,Description,Amount,Category`
 - "memo" - `"Date","Transaction","Name","Memo","Amount"`
 - "long" - `05/20/2019  Mon,,"BUSINESS",,,,,2.10,,,,,,,,`
+- "ref" - ` 05/11/2019,BUSINESS,"-1.17"`
 
 Use a name from the list above when sending in the flags to help the script
 know how to expect the columns in the input file. For example:
