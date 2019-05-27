@@ -50,6 +50,14 @@ def convert_input(row):
                 "amount": abs(float(row[2])),
                 "category": "",
                 }
+    elif (args.format == 'sale'):
+        if row[4] == "Sale":
+            return {
+                "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
+                "description": row[2],
+                "amount": abs(float(row[5])),
+                "category": row[3],
+                }
     elif (args.format == 'status'):
         if row[3] and float(row[3]) > 0:
             return {

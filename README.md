@@ -19,6 +19,7 @@ on the input column format of the CSV.
 - "default" - `Trans. Date,Post Date,Description,Amount,Category`
 - "long" - `05/20/2019  Mon,,"BUSINESS",,,,,2.10,,,,,,,,`
 - "memo" - `"Date","Transaction","Name","Memo","Amount"`
+- "sale" - `Transaction Date,Post Date,Description,Category,Type,Amount`
 - "status" - `Status,Date,Description,Debit,Credit`
 - "ref" - ` 05/11/2019,BUSINESS,"-1.17"`
 
