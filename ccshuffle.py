@@ -10,27 +10,39 @@ parser.add_argument("-i", "--input", dest="input_file",
 parser.add_argument("-o", "--output", dest="output_file",
     default='/tmp/activity-processed.csv',
     help="Output location of reformatted CSV (default: %(default)s)")
+parser.add_argument("-f", "--format", dest="format",
+    default='basic',
+    help="Format of input transactions CSV")
 args = parser.parse_args()
 
 expenses = []
 
+def convert_input(row):
+    if (args.format == 'basic'):
+        if float(row[3]) > 0:
+            return {
+                "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
+                "description": row[2],
+                "amount": row[3],
+                "category": row[4],
+                }
+
 try:
     with open(args.input_file) as csv_file:
         csv_reader = csv.reader(csv_file)
-        has_header = csv.Sniffer().has_header(csv_file.read(1024))
-        csv_file.seek(0)
 
-        if has_header:
-            next(csv_reader)
+        if (args.format == 'basic'):
+            has_header = csv.Sniffer().has_header(csv_file.read(1024))
+            csv_file.seek(0)
+
+            if has_header:
+                next(csv_reader)
 
         for row in csv_reader:
-            if float(row[3]) > 0:
-                expenses.append({
-                    "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
-                    "description": row[2],
-                    "amount": row[3],
-                    "category": row[4],
-                    })
+            row_extract = convert_input(row)
+            if row_extract:
+                expenses.append(row_extract)
+
 except FileNotFoundError:
     print("Cannot open transactions file: " + args.input_file)
 
