@@ -26,6 +26,14 @@ def convert_input(row):
                 "amount": abs(float(row[3])),
                 "category": row[4],
                 }
+    elif (args.format == 'long'):
+        if float(row[7]) > 0:
+            return {
+                "transaction_date": datetime.strptime(row[0], '%m/%d/%Y %a').strftime('%Y-%m-%d'),
+                "description": row[2],
+                "amount": abs(float(row[7])),
+                "category": "",
+                }
     elif (args.format == 'memo'):
         if row[1] == "DEBIT":
             return {
