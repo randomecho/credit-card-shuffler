@@ -11,14 +11,15 @@ parser.add_argument("-o", "--output", dest="output_file",
     default='/tmp/activity-processed.csv',
     help="Output location of reformatted CSV (default: %(default)s)")
 parser.add_argument("-f", "--format", dest="format",
-    default='basic',
+    default='post_desc_amt_cat',
     help="Format of input transactions CSV")
 args = parser.parse_args()
 
 expenses = []
 
+
 def convert_input(row):
-    if (args.format == 'basic'):
+    if (args.format == 'post_desc_amt_cat'):
         if float(row[3]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -26,7 +27,7 @@ def convert_input(row):
                 "amount": row[3],
                 "category": row[4],
                 }
-    elif (args.format == 'long'):
+    elif (args.format == 'long_commas'):
         if float(row[7]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y %a').strftime('%Y-%m-%d'),
@@ -34,7 +35,7 @@ def convert_input(row):
                 "amount": row[7],
                 "category": "",
                 }
-    elif (args.format == 'memo'):
+    elif (args.format == 'name_memo_amt'):
         if row[1] == "DEBIT":
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -42,7 +43,7 @@ def convert_input(row):
                 "amount": row[4],
                 "category": "",
                 }
-    elif (args.format == 'ref'):
+    elif (args.format == 'business'):
         if float(row[2]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[0].strip(), '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -50,7 +51,7 @@ def convert_input(row):
                 "amount": row[2],
                 "category": "",
                 }
-    elif (args.format == 'sale'):
+    elif (args.format == 'desc_cat_type'):
         if row[4] == "Sale":
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -58,7 +59,7 @@ def convert_input(row):
                 "amount": row[5],
                 "category": row[3],
                 }
-    elif (args.format == 'status'):
+    elif (args.format == 'status_debit_credit'):
         if row[3] and float(row[3]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[1], '%m/%d/%Y').strftime('%Y-%m-%d'),
