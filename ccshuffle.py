@@ -1,7 +1,9 @@
 import csv
+import os
 from argparse import ArgumentParser
 from datetime import datetime
 from operator import itemgetter
+from pathlib import Path
 
 parser = ArgumentParser()
 parser.add_argument("-i", "--input", dest="input_file",
@@ -103,6 +105,9 @@ except FileNotFoundError:
 
 if expenses:
     expenses.sort(key=itemgetter("transaction_date"))
+
+    if Path(args.output_file).is_file():
+        os.remove(args.output_file)
 
     with open(args.output_file, "w") as output_file_location:
         columns = ['transaction_date', 'amount', 'category', 'description']
