@@ -68,6 +68,22 @@ def convert_input(row):
                 "category": "",
                 }
 
+
+def detect_format(first_row):
+    input_format = None
+
+    if first_row == "Trans. Date,Post Date,Description,Amount,Category":
+        input_format = "post_desc_amt_cat"
+    elif first_row == "Transaction Date,Post Date,Description,Category,Type,Amount":
+        input_format = "desc_cat_type"
+    elif first_row == "Status,Date,Description,Debit,Credit":
+        input_format = "status_debit_credit"
+    elif ',,,,,,' in first_row:
+        input_format = "long_commas"
+
+    return input_format
+
+
 try:
     with open(args.input_file) as csv_file:
         csv_reader = csv.reader(csv_file)
