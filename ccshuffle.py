@@ -10,16 +10,14 @@ parser.add_argument("-i", "--input", dest="input_file",
 parser.add_argument("-o", "--output", dest="output_file",
     default='/tmp/activity-processed.csv',
     help="Output location of reformatted CSV (default: %(default)s)")
-parser.add_argument("-f", "--format", dest="format",
-    default='post_desc_amt_cat',
-    help="Format of input transactions CSV")
 args = parser.parse_args()
 
 expenses = []
+found_format = None
 
 
 def convert_input(row):
-    if (args.format == 'post_desc_amt_cat'):
+    if (found_format == 'post_desc_amt_cat'):
         if float(row[3]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -27,7 +25,7 @@ def convert_input(row):
                 "amount": row[3],
                 "category": row[4],
                 }
-    elif (args.format == 'long_commas'):
+    elif (found_format == 'long_commas'):
         if float(row[7]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y %a').strftime('%Y-%m-%d'),
@@ -35,7 +33,7 @@ def convert_input(row):
                 "amount": row[7],
                 "category": "",
                 }
-    elif (args.format == 'name_memo_amt'):
+    elif (found_format == 'name_memo_amt'):
         if row[1] == "DEBIT":
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -43,7 +41,7 @@ def convert_input(row):
                 "amount": row[4],
                 "category": "",
                 }
-    elif (args.format == 'business'):
+    elif (found_format == 'business'):
         if float(row[2]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[0].strip(), '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -51,7 +49,7 @@ def convert_input(row):
                 "amount": row[2],
                 "category": "",
                 }
-    elif (args.format == 'desc_cat_type'):
+    elif (found_format == 'desc_cat_type'):
         if row[4] == "Sale":
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -59,7 +57,7 @@ def convert_input(row):
                 "amount": row[5],
                 "category": row[3],
                 }
-    elif (args.format == 'status_debit_credit'):
+    elif (found_format == 'status_debit_credit'):
         if row[3] and float(row[3]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[1], '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -88,10 +86,10 @@ try:
     with open(args.input_file) as csv_file:
         csv_reader = csv.reader(csv_file)
 
-        has_header = csv.Sniffer().has_header(csv_file.read(1024))
-        csv_file.seek(0)
+        first_row = csv_file.readline().strip()
+        found_format = detect_format(first_row)
 
-        if has_header:
+        if found_format != 'long_commas':
             next(csv_reader)
 
         for row in csv_reader:
@@ -101,6 +99,7 @@ try:
 
 except FileNotFoundError:
     print("Cannot open transactions file: " + args.input_file)
+
 
 if expenses:
     expenses.sort(key=itemgetter("transaction_date"))
