@@ -120,3 +120,5 @@ if expenses:
                 expense["category"],
                 expense["description"],
             ])
+
+        print("CSV transformed into file: {}".format(args.output_file))
