@@ -121,4 +121,7 @@ if expenses:
                 expense["description"],
             ])
 
+    if Path(args.output_file).is_file():
         print("CSV transformed into file: {}".format(args.output_file))
+    else:
+        print("No output file generated")
