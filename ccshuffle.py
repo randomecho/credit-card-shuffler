@@ -91,6 +91,10 @@ try:
         first_row = csv_file.readline().strip()
         found_format = detect_format(first_row)
 
+        if found_format == None:
+            print("Format not recognised for {}".format(args.input_file))
+            exit(1)
+
         if found_format != 'long_commas':
             next(csv_reader)
 
