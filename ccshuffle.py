@@ -43,12 +43,28 @@ def convert_input(row):
                 "amount": row[4],
                 "category": "",
                 }
+    elif (found_format == 'amex'):
+        if row[7] == "DEBIT":
+            return {
+                "transaction_date": datetime.strptime(row[0], '%m/%d/%y').strftime('%Y-%m-%d'),
+                "description": row[2],
+                "amount": row[5],
+                "category": row[6],
+                }
     elif (found_format == 'business'):
         if float(row[2]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[0].strip(), '%m/%d/%Y').strftime('%Y-%m-%d'),
                 "description": row[1],
                 "amount": row[2],
+                "category": "",
+                }
+    elif (found_format == 'date_trans'):
+        if abs(float(row[4])) > 0:
+            return {
+                "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
+                "description": row[2],
+                "amount": abs(float(row[4])),
                 "category": "",
                 }
     elif (found_format == 'desc_cat_type'):
@@ -78,6 +94,10 @@ def detect_format(first_row):
         input_format = "desc_cat_type"
     elif first_row == "Status,Date,Description,Debit,Credit":
         input_format = "status_debit_credit"
+    elif first_row == '"Date","Transaction","Name","Memo","Amount"':
+        input_format = "date_trans"
+    elif first_row == "Date,Reference,Description,Card Member,Card Number,Amount,Category,Type":
+        input_format = "amex"
     elif ',,,,,,' in first_row:
         input_format = "long_commas"
 
@@ -100,6 +120,7 @@ try:
 
         for row in csv_reader:
             row_extract = convert_input(row)
+
             if row_extract:
                 expenses.append(row_extract)
 
