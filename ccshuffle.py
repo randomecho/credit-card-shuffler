@@ -49,7 +49,7 @@ def convert_input(row):
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%y').strftime('%Y-%m-%d'),
                 "description": row[1],
                 "amount": row[2],
-                "category": 'misc',
+                "category": "",
                 }
     elif (found_format == 'business'):
         if float(row[2]) > 0:
@@ -83,6 +83,16 @@ def convert_input(row):
                 "amount": row[3],
                 "category": "",
                 }
+    elif (found_format == 'hsbc'):
+        if row[2] and float(row[2]) > 0:
+            excess_transaction_detail_start = row[1].find(" REF NO") - 3
+
+            return {
+                "transaction_date": datetime.strptime(row[0].strip(), '%m/%d/%Y').strftime('%Y-%m-%d'),
+                "description": row[1][0:excess_transaction_detail_start].strip(),
+                "amount": row[2],
+                "category": "",
+                }
 
 
 def detect_format(first_row):
@@ -98,6 +108,8 @@ def detect_format(first_row):
         input_format = "date_trans"
     elif first_row == "Date,Description,Amount":
         input_format = "amex"
+    elif "REF NO" in first_row and "TRAN CD" in first_row and "SIC CD" in first_row:
+        input_format = "hsbc"
     elif ',,,,,,' in first_row:
         input_format = "long_commas"
 
