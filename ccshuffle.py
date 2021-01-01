@@ -19,7 +19,7 @@ found_format = None
 
 
 def convert_input(row):
-    if (found_format == 'post_desc_amt_cat'):
+    if (found_format == 'discover'):
         if float(row[3]) > 0:
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -99,7 +99,7 @@ def detect_format(first_row):
     input_format = None
 
     if first_row == "Trans. Date,Post Date,Description,Amount,Category":
-        input_format = "post_desc_amt_cat"
+        input_format = "discover"
     elif first_row == "Transaction Date,Post Date,Description,Category,Type,Amount":
         input_format = "desc_cat_type"
     elif first_row == "Status,Date,Description,Debit,Credit":
