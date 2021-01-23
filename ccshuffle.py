@@ -46,7 +46,7 @@ def convert_input(row):
     elif (found_format == 'amex'):
         if float(row[2]) > 0:
             return {
-                "transaction_date": datetime.strptime(row[0], '%m/%d/%y').strftime('%Y-%m-%d'),
+                "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
                 "description": row[1],
                 "amount": row[2],
                 "category": "",
@@ -67,7 +67,7 @@ def convert_input(row):
                 "amount": abs(float(row[4])),
                 "category": "",
                 }
-    elif (found_format == 'desc_cat_type'):
+    elif (found_format == 'chase'):
         if row[4] == "Sale":
             return {
                 "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
@@ -100,8 +100,8 @@ def detect_format(first_row):
 
     if first_row == "Trans. Date,Post Date,Description,Amount,Category":
         input_format = "discover"
-    elif first_row == "Transaction Date,Post Date,Description,Category,Type,Amount":
-        input_format = "desc_cat_type"
+    elif first_row == "Transaction Date,Post Date,Description,Category,Type,Amount,Memo":
+        input_format = "chase"
     elif first_row == "Status,Date,Description,Debit,Credit":
         input_format = "status_debit_credit"
     elif first_row == '"Date","Transaction","Name","Memo","Amount"':
