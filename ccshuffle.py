@@ -130,7 +130,7 @@ try:
             print("Format not recognised for {}".format(args.input_file))
             exit(1)
 
-        if found_format != 'long_commas':
+        if found_format != 'long_commas' and found_format != 'hsbc':
             next(csv_reader)
 
         for row in csv_reader:
