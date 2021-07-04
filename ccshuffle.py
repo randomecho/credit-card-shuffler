@@ -84,6 +84,9 @@ def convert_input(row):
                 "category": "",
                 }
     elif (found_format == 'hsbc'):
+        if '--' in row[2]:
+            return
+
         if row[2] and float(row[2]) > 0:
             excess_transaction_detail_start = row[1].find(" REF NO") - 3
 
