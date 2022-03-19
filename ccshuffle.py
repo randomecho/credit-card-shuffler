@@ -67,10 +67,10 @@ def convert_input(row):
                 "amount": row[2],
                 "category": "",
                 }
-    elif (found_format == 'date_trans'):
-        if abs(float(row[4])) > 0:
+    elif (found_format == 'us_bank'):
+        if row[1] != 'CREDIT':
             return {
-                "transaction_date": datetime.strptime(row[0], '%m/%d/%Y').strftime('%Y-%m-%d'),
+                "transaction_date": row[0].strip(),
                 "description": row[2],
                 "amount": abs(float(row[4])),
                 "category": "",
@@ -116,7 +116,7 @@ def detect_format(first_row):
     elif first_row == "Status,Date,Description,Debit,Credit":
         input_format = "status_debit_credit"
     elif first_row == '"Date","Transaction","Name","Memo","Amount"':
-        input_format = "date_trans"
+        input_format = "us_bank"
     elif first_row == "Date,Description,Amount":
         input_format = "amex"
     elif first_row == "Date,Description,Card Member,Account #,Amount":
