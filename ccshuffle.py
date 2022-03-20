@@ -155,6 +155,7 @@ except FileNotFoundError:
 
 if expenses:
     expenses.sort(key=itemgetter("transaction_date"))
+    transformed_lines = ''
 
     if Path(args.output_file).is_file():
         os.remove(args.output_file)
@@ -164,12 +165,13 @@ if expenses:
         csv_out = csv.writer(output_file_location)
 
         for expense in expenses:
-            csv_out.writerow([
-                expense["transaction_date"],
-                abs(float(expense["amount"])),
-                expense["category"],
-                expense["description"],
-            ])
+            transformed_lines += expense["transaction_date"]+"," \
+                +str(abs(float(expense["amount"])))+"," \
+                +expense["category"]+"," \
+                +expense["description"] \
+                +"\n"
+
+        output_file_location.write(transformed_lines)
 
     if Path(args.output_file).is_file():
         print("CSV transformed into file: {}".format(args.output_file))
