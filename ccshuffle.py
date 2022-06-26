@@ -150,8 +150,8 @@ try:
             print("Format not recognised for {}".format(args.input_file))
             exit(1)
 
-        if found_format != 'long_commas' and found_format != 'hsbc':
-            next(csv_reader)
+        if found_format == 'hsbc':
+            csv_file.seek(0)
 
         for row in csv_reader:
             row_extract = convert_input(row)
