@@ -59,6 +59,14 @@ def convert_input(row):
                 "amount": row[4],
                 "category": "",
                 }
+    elif (found_format == 'bank'):
+        if row[4] == 'Debit':
+            return {
+                "transaction_date": row[1].strip(),
+                "description": row[2],
+                "amount": row[5],
+                "category": "",
+                }
     elif (found_format == 'business'):
         if float(row[2]) > 0:
             return {
@@ -121,6 +129,8 @@ def detect_format(first_row):
         input_format = "amex"
     elif first_row == "Date,Description,Card Member,Account #,Amount":
         input_format = "amex_multi"
+    elif first_row == '"Account Name","Processed Date","Description","Check Number","Credit or Debit","Amount"':
+        input_format = "bank"
     elif "REF NO" in first_row and "TRAN CD" in first_row and "SIC CD" in first_row:
         input_format = "hsbc"
     elif ',,,,,,' in first_row:
