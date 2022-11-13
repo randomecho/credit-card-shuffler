@@ -27,6 +27,14 @@ def convert_input(row):
                 "amount": row[3],
                 "category": row[4],
                 }
+    elif (found_format == 'capitalone'):
+        if float(row[5]) > 0:
+            return {
+                "transaction_date": row[0],
+                "description": row[3],
+                "amount": row[5],
+                "category": row[4],
+                }
     elif (found_format == 'long_commas'):
         if float(row[7]) > 0:
             return {
@@ -119,6 +127,8 @@ def detect_format(first_row):
 
     if first_row == "Trans. Date,Post Date,Description,Amount,Category":
         input_format = "discover"
+    elif first_row == "Transaction Date,Posted Date,Card No.,Description,Category,Debit,Credit":
+        input_format = "capitalone"
     elif first_row == "Transaction Date,Post Date,Description,Category,Type,Amount,Memo":
         input_format = "chase"
     elif first_row == "Status,Date,Description,Debit,Credit":
